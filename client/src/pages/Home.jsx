@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { CheckCircle2, Circle, Target, Flame, Trophy, BookOpen, Code2, ArrowRight, Zap } from "lucide-react";
+import { CheckCircle2, Circle, Target, Flame, Trophy, BookOpen, Code2, ArrowRight, Zap, Timer } from "lucide-react";
 import ProgressCircle from "../components/ProgressCircle";
 import { todaysPlan, userStats } from "../data/questions";
 
@@ -81,24 +81,30 @@ function Home() {
           <p className="text-sm text-muted-foreground mb-4">
             Jump into a quick practice session
           </p>
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <Link
               to="/aptitude"
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-gradient-to-r from-primary to-primary/80 text-primary-foreground font-medium transition-all hover:opacity-90 active:scale-[0.98]"
+              className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-gradient-to-r from-primary to-primary/80 text-primary-foreground font-medium transition-all hover:opacity-90 active:scale-[0.98]"
               data-testid="button-aptitude"
             >
               <BookOpen className="h-4 w-4" />
               <span>Aptitude</span>
-              <ArrowRight className="h-4 w-4 ml-auto" />
             </Link>
             <Link
               to="/dsa"
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-purple-500 text-white font-medium transition-all hover:opacity-90 active:scale-[0.98]"
+              className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-purple-500 text-white font-medium transition-all hover:opacity-90 active:scale-[0.98]"
               data-testid="button-dsa"
             >
               <Code2 className="h-4 w-4" />
               <span>DSA</span>
-              <ArrowRight className="h-4 w-4 ml-auto" />
+            </Link>
+            <Link
+              to="/timed"
+              className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-white font-medium transition-all hover:opacity-90 active:scale-[0.98]"
+              data-testid="button-timed"
+            >
+              <Timer className="h-4 w-4" />
+              <span>Timed</span>
             </Link>
           </div>
         </div>

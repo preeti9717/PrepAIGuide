@@ -7,11 +7,12 @@ import DSA from "./pages/DSA";
 import Review from "./pages/Review";
 import Profile from "./pages/Profile";
 import Quiz from "./pages/Quiz";
+import TimedPractice from "./pages/TimedPractice";
 import NotFound from "./pages/not-found";
 
 function App() {
   const location = useLocation();
-  const isQuizPage = location.pathname.startsWith('/quiz');
+  const isQuizPage = location.pathname.startsWith('/quiz') || location.pathname.startsWith('/timed');
   
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -24,6 +25,7 @@ function App() {
           <Route path="/review" element={<Review />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/quiz/:type/:id" element={<Quiz />} />
+          <Route path="/timed" element={<TimedPractice />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
