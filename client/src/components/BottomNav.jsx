@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { Home, BookOpen, RotateCcw, User } from "lucide-react";
 
 const navItems = [
-  { to: "/", icon: Home, label: "Home" },
+  { to: "/app", icon: Home, label: "Home" },
   { to: "/aptitude", icon: BookOpen, label: "Practice" },
   { to: "/review", icon: RotateCcw, label: "Review" },
   { to: "/profile", icon: User, label: "Profile" }

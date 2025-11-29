@@ -1,10 +1,33 @@
 import express, { type Request, Response, NextFunction } from "express";
+import session from "express-session";
+import passport from "passport";
+import MemoryStore from "memorystore";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
+import { initializeAuth } from "./auth";
 
 const app = express();
 const httpServer = createServer(app);
+
+// Initialize authentication
+initializeAuth();
+
+// Set up session store
+const MemStore = MemoryStore(session) as any;
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "development-secret",
+    resave: false,
+    saveUninitialized: false,
+    store: new MemStore(),
+    cookie: { secure: false, httpOnly: true },
+  })
+);
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 declare module "http" {
   interface IncomingMessage {

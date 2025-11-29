@@ -1,6 +1,7 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Code2, ArrowRight, CheckCircle2, Layers, Binary, Link2, TreeDeciduous, Workflow } from "lucide-react";
 import { dsaTopics } from "../data/questions";
+import { useState } from "react";
 
 const levelColors = {
   Beginner: "bg-green-500/10 text-green-400 border-green-500/20",
@@ -17,6 +18,13 @@ const topicIcons = {
 };
 
 function DSA() {
+  const navigate = useNavigate();
+  const [selectedTopic, setSelectedTopic] = useState(null);
+
+  const handlePracticeTopic = (topicName) => {
+    setSelectedTopic(topicName);
+    navigate(`/dsa?topic=${encodeURIComponent(topicName)}`);
+  };
   return (
     <div className="px-4 py-6 max-w-6xl mx-auto">
       <div className="mb-6">
@@ -80,6 +88,7 @@ function DSA() {
               </div>
               
               <button
+                onClick={() => handlePracticeTopic(topic.name)}
                 className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-purple-500/10 text-purple-400 font-medium text-sm transition-all hover:bg-purple-500 hover:text-white group-hover:bg-purple-500 group-hover:text-white"
                 data-testid={`button-practice-${topic.id}`}
               >

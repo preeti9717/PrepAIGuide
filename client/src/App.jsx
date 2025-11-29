@@ -63,8 +63,22 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/quiz/:type/:id" element={<Quiz />} />
-          <Route path="/timed" element={<TimedPractice />} />
+          <Route
+            path="/quiz/:type/:id"
+            element={
+              <ProtectedRoute>
+                <Quiz />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/timed"
+            element={
+              <ProtectedRoute>
+                <TimedPractice />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

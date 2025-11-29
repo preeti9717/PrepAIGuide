@@ -11,26 +11,36 @@ interface UserProfile {
 const users: Map<string, UserProfile> = new Map();
 
 export function initializeAuth() {
-  passport.use(
-    new GoogleStrategy(
-      {
-        clientID: process.env.GOOGLE_CLIENT_ID || "",
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-        callbackURL: "/auth/google/callback",
-      },
-      (accessToken, refreshToken, profile, done) => {
-        const userProfile: UserProfile = {
-          id: profile.id,
-          displayName: profile.displayName || "",
-          email: profile.emails?.[0]?.value || "",
-          picture: profile.photos?.[0]?.value,
-        };
+  // Only initialize Google OAuth if credentials are provided
+  const clientID = process.env.GOOGLE_CLIENT_ID;
+  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
 
-        users.set(profile.id, userProfile);
-        return done(null, userProfile);
-      }
-    )
-  );
+  if (clientID && clientSecret) {
+    passport.use(
+      new GoogleStrategy(
+        {
+          clientID,
+          clientSecret,
+          callbackURL: "/auth/google/callback",
+        },
+        (accessToken, refreshToken, profile, done) => {
+          const userProfile: UserProfile = {
+            id: profile.id,
+            displayName: profile.displayName || "",
+            email: profile.emails?.[0]?.value || "",
+            picture: profile.photos?.[0]?.value,
+          };
+
+          users.set(profile.id, userProfile);
+          return done(null, userProfile);
+        }
+      )
+    );
+  } else {
+    console.warn(
+      "⚠️  Google OAuth credentials not configured. Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET to enable authentication."
+    );
+  }
 
   passport.serializeUser((user: any, done) => {
     done(null, user.id);
