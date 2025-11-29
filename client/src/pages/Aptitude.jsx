@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Brain, Calculator, Lightbulb, Filter } from "lucide-react";
 import { aptitudeQuestions } from "../data/questions";
 
@@ -18,11 +18,16 @@ const filterChips = ["All", "Quant", "Logical", "Easy", "Medium", "Hard"];
 
 function Aptitude() {
   const [activeFilter, setActiveFilter] = useState("All");
+  const navigate = useNavigate();
   
   const filteredQuestions = aptitudeQuestions.filter(q => {
     if (activeFilter === "All") return true;
     return q.category === activeFilter || q.difficulty === activeFilter;
   });
+  
+  const handleStartQuiz = (questionId) => {
+    navigate(`/quiz/aptitude/${questionId}`);
+  };
 
   return (
     <div className="px-4 py-6 max-w-6xl mx-auto">
@@ -93,6 +98,7 @@ function Aptitude() {
               </p>
               
               <button
+                onClick={() => handleStartQuiz(question.id)}
                 className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary/10 text-primary font-medium text-sm transition-all hover:bg-primary hover:text-primary-foreground group-hover:bg-primary group-hover:text-primary-foreground"
                 data-testid={`button-start-${question.id}`}
               >
