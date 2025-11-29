@@ -1,18 +1,51 @@
-import { Link } from "react-router-dom";
-import { CheckCircle2, Circle, Target, Flame, Trophy, BookOpen, Code2, ArrowRight, Zap, Timer } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { CheckCircle2, Circle, Target, Flame, Trophy, BookOpen, Code2, ArrowRight, Zap, Timer, LogOut } from "lucide-react";
 import ProgressCircle from "../components/ProgressCircle";
 import { todaysPlan, userStats } from "../data/questions";
+import { useState, useEffect } from "react";
 
 function Home() {
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch("/api/auth/me");
+        if (response.ok) {
+          const userData = await response.json();
+          setUser(userData);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
+    };
+    fetchUser();
+  }, []);
+
+  const handleLogout = () => {
+    window.location.href = "/auth/logout";
+  };
+
   return (
     <div className="px-4 py-6 max-w-6xl mx-auto">
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold tracking-tight" data-testid="text-welcome">
-          Welcome back
-        </h2>
-        <p className="text-muted-foreground mt-1">
-          Ready to ace your interviews today?
-        </p>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight" data-testid="text-welcome">
+            Welcome {user?.displayName ? `back, ${user.displayName.split(' ')[0]}` : 'back'}
+          </h2>
+          <p className="text-muted-foreground mt-1">
+            Ready to ace your interviews today?
+          </p>
+        </div>
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border hover:bg-muted/50 transition-colors text-muted-foreground hover:text-foreground"
+          data-testid="button-logout"
+        >
+          <LogOut className="h-4 w-4" />
+          <span className="text-sm font-medium">Logout</span>
+        </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
@@ -24,26 +57,38 @@ function Home() {
             <h3 className="font-semibold text-lg">Today's Plan</h3>
           </div>
           <div className="space-y-3">
-            {todaysPlan.map((item) => (
-              <div
-                key={item.id}
-                className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${
-                  item.completed 
-                    ? "bg-green-500/10 text-green-400" 
-                    : "bg-muted/50"
-                }`}
-                data-testid={`task-${item.id}`}
-              >
-                {item.completed ? (
-                  <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
-                ) : (
-                  <Circle className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                )}
-                <span className={`text-sm font-medium ${item.completed ? "line-through opacity-70" : ""}`}>
-                  {item.task}
-                </span>
-              </div>
-            ))}
+            {todaysPlan.map((item) => {
+              let onClick = null;
+              if (item.task.includes("Aptitude")) {
+                onClick = () => navigate("/aptitude");
+              } else if (item.task.includes("DSA")) {
+                onClick = () => navigate("/dsa");
+              } else if (item.task.includes("Review")) {
+                onClick = () => navigate("/review");
+              }
+
+              return (
+                <button
+                  key={item.id}
+                  onClick={onClick}
+                  className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors text-left ${
+                    item.completed 
+                      ? "bg-green-500/10 text-green-400 cursor-default" 
+                      : "bg-muted/50 hover:bg-muted/70 cursor-pointer"
+                  }`}
+                  data-testid={`task-${item.id}`}
+                >
+                  {item.completed ? (
+                    <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
+                  ) : (
+                    <Circle className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+                  )}
+                  <span className={`text-sm font-medium ${item.completed ? "line-through opacity-70" : ""}`}>
+                    {item.task}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
